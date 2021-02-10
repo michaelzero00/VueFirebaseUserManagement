@@ -1,36 +1,30 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import Vuetify from 'vuetify'
-const App = () => import('./App')
-import * as firebase from 'firebase'
-import router from './router'
-import { store } from './store'
-const AlertCmp = () => import('./components/Shared/Alert.vue')
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import { store } from "./store";
 
-Vue.use(Vuetify)
-Vue.config.productionTip = false
+//firebase imports
+import firebase from "firebase/app";
+import "firebase/auth";
+import "./firebase/firebaseInit";
 
-Vue.component('app-alert', AlertCmp)
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
-  components: { App },
-  created () {
-    firebase.initializeApp({
-      apiKey: '',
-      authDomain: '',
-      databaseURL: '',
-      projectId: '',
-      storageBucket: ''
-    })
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.$store.dispatch('autoSignIn', user)
-      }
-    })
-  }
-})
+// import the bulma scss
+require('@/assets/main.scss');
+
+Vue.config.productionTip = false;
+
+// prevents firebase from querying auth state change on page refresh by user
+let app;
+firebase.auth().onAuthStateChanged(() => {
+    if (!app) {
+        /* eslint-disable no-new */
+        app = new Vue({
+            el: "#app",
+            router,
+            store,
+            render: h => h(App),
+            template: "<App/>",
+            components: { App }
+        });
+    }
+});
