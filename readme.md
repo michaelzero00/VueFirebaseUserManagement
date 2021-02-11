@@ -33,6 +33,7 @@ You'll need a free Firebase account.
 3. Start a new Firebase project and enable Firebase Auth (at least the email and password option) and Firebase Firestore.
 4. Copy your project settings from the Project Overview => Firebase SDK snippet => Config screen
 5. Rename `src/firebase/firebaseInit_template.js` to `src/firebase/firebaseInit.js` and enter your details from step 4.
-6. Run    ```sh
+6. Run    
+    ```sh
    npm run serve
    ```
