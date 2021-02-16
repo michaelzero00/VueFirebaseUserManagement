@@ -4,7 +4,7 @@
 
     <router-link 
           :to="{ name: 'Home' }"
-          class="navbar-item">moodframe
+          class="navbar-item">Firebase User Management
           </router-link>
 
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -17,31 +17,31 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item">
-        Home
+        Nav Link
       </a>
 
       <a class="navbar-item">
-        Documentation
+        Nav Link
       </a>
 
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">
-          More
+          Nav Link
         </a>
 
         <div class="navbar-dropdown">
           <a class="navbar-item">
-            About
+            Nav Link
           </a>
           <a class="navbar-item">
-            Jobs
+            Nav Link
           </a>
           <a class="navbar-item">
-            Contact
+            Nav Link
           </a>
           <hr class="navbar-divider">
           <a class="navbar-item">
-            Report an issue
+            Nav Link
           </a>
         </div>
       </div>
