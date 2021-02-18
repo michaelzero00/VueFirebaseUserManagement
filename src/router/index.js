@@ -7,6 +7,7 @@ import SignIn from '../views/auth/SignIn.vue'
 import UserProfile from '../views/UserProfile.vue'
 import ResetPassword from '../views/auth/ResetPassword.vue'
 import CurrentUserProfile from '../views/user/CurrentUserProfile.vue'
+import AllUsers from '../views/user/AllUsers.vue'
 //import firebase for route guards
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -55,6 +56,11 @@ const routes = [{
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: '/users',
+        name: 'AllUsers',
+        component: AllUsers
     }
 
 ];

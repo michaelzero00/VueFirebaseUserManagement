@@ -1,17 +1,16 @@
 <template>
   <div class="container">
+    <progress v-if="loading" class="progress is-small is-primary" max="100">15%</progress>
     <!-- can't find a user that matches that slug in the db -->
-    <div v-if="!searchedUser">No user found with that name</div>
+    <div v-if="!searchedUser && !loading">No user found with that name</div>
     <!-- found the user, render the page -->
     <div class="hero-body" v-if="searchedUser">
       <h1 class="title">{{ searchedUser.userName }}</h1>
       <ul>
-        <li><em>Emaiasdasdl:</em> {{ searchedUser.email }}</li>
+        <li><em>Email:</em> {{ searchedUser.email }}</li>
         <li><em>UID:</em> {{ searchedUser.uid }}</li>
-        <li><em>User Role:</em> {{ searchedUser.userRole }}lalala</li>
-        <div v-if="currentUser">There is a current user</div>
-        <div v-else>There is no current user in state</div>
-        <div class="">test</div>
+        <li><em>User Role:</em> {{ searchedUser.userRole }}</li>
+        <li v-if="searchedUser.photoUrl">has a photo</li>
       </ul>
     </div>
   </div>
@@ -27,25 +26,25 @@ export default {
     user: (state) => state.user.user,
     loading: (state) => state.shared.loading,
   }),
-  redirect: function(){
-    console.log('redirect function triggered')
-          if (!this.user.userSlug) {
-        this.$router.push(`/login`);
-      }
+  data(){
+    return {
+      searchedUser: null,
+    }
   },
   mounted() {
-    if (this.user) {
-      console.log(`found user in state, searching db`);
+    this.$store.commit("setLoading", true)
       db.collection("users")
         .where("userSlug", "==", this.$route.params.userSlug)
         .get()
         .then((snapshot) => {
           if (snapshot.empty) {
-            console.log("no matching users");
+            this.searchedUser = null;
+            this.$store.dispatch("setLoading", false)
             return;
           } else {
             snapshot.forEach((doc) => {
               this.searchedUser = doc.data();
+              this.$store.commit("setLoading", false)
             });
           }
         })
@@ -53,11 +52,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      console.log(`no user in state, redirecting`);
-      this.$router.push(`/signin`);
     }
-  },
 };
 </script>
 

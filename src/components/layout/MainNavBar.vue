@@ -17,26 +17,12 @@
         <span aria-hidden="true"></span>
       </a>
     </div>
-
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item"> Nav Link </a>
-
-        <a class="navbar-item"> Nav Link </a>
-
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link"> Nav Link </a>
-
-          <div class="navbar-dropdown">
-            <a class="navbar-item"> Nav Link </a>
-            <a class="navbar-item"> Nav Link </a>
-            <a class="navbar-item"> Nav Link </a>
-            <hr class="navbar-divider" />
-            <a class="navbar-item"> Nav Link </a>
-          </div>
-        </div>
+        <router-link :to="{ name: 'AllUsers' }" class="navbar-item"
+          >All Users
+        </router-link>
       </div>
-
       <div class="navbar-end">
         <div class="navbar-item has-dropdown is-hoverable" v-if="currentUser">
           <a class="navbar-link">
@@ -46,12 +32,8 @@
                 : currentUser.userName
             }}
           </a>
-
           <div class="navbar-dropdown">
-            <router-link
-              class="navbar-item"
-              to="profile"
-            >
+            <router-link class="navbar-item" to="profile">
               Account
             </router-link>
 
