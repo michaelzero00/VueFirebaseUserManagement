@@ -17,7 +17,7 @@
                 </span>
                 <span> Continue with Google </span>
               </button>
-              <button
+              <!-- <button
                 type="button"
                 class="button button has-margin-bottom-25 facebook is-fullwidth"
               >
@@ -25,7 +25,7 @@
                   <i class="mdi mdi-24px mdi-facebook"></i>
                 </span>
                 <span> Continue with Facebook </span>
-              </button>
+              </button> -->
             </div>
             <hr />
             <h3 class="mb-5">or sign in via email or username</h3>
@@ -83,6 +83,11 @@
 <script>
 import { mapState } from "vuex";
 export default {
+    mounted() {
+      if (this.user){
+      this.$router.push(`/profile`)
+    }
+  },
   data() {
     return {
       email: "",
@@ -93,6 +98,7 @@ export default {
     error: (state) => state.shared.error,
     user: (state) => state.user.user,
     loading: (state) => state.shared.loading,
+    currentUser: (state) => state.user.user,
   }),
   methods: {
     handleLoginSubmit() {
@@ -107,12 +113,8 @@ export default {
   },
   watch: {
     user() {
-      if (this.user.userSlug !== undefined) {
-        this.$router.push({
-          name: "UserProfile",
-          params: { userSlug: this.user.userSlug },
-        });
-        //this.$router.push(`/user/${this.user.userSlug}`);
+      if (this.user) {
+        this.$router.push(`/profile`);
       }
     },
   },

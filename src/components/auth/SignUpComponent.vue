@@ -6,22 +6,25 @@
           <h3 class="title has-text-black-bis">Sign Up</h3>
           <p class="subtitle has-text-grey">Please sign in to proceed.</p>
           <div class="box">
-            <!-- <div class="buttons">
-            <button type="button" 
-                    class="button button has-margin-bottom-25 google is-fullwidth">
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-google"></i>
-                </span> 
+            <div class="buttons">
+              <button
+                type="button"
+                class="button button has-margin-bottom-25 google is-fullwidth"
+                @click.prevent="onSigninGoogle"
+              >
+                <span class="icon">
+                  <i class="mdi mdi-24px mdi-google"></i>
+                </span>
                 <span> Continue with Google </span>
-            </button>
-            <button type="button" 
+              </button>
+              <!-- <button type="button" 
                     class="button button has-margin-bottom-25 facebook is-fullwidth">
               <span class="icon">
                 <i class="mdi mdi-24px mdi-facebook"></i>
                 </span> 
                 <span> Continue with Facebook </span>
-            </button>
-          </div> -->
+            </button> -->
+            </div>
             <hr />
             <h3 class="mb-5">or sign up via email</h3>
             <form @submit.prevent="submit">
@@ -86,6 +89,13 @@ import { mapState } from "vuex";
 import TestUserName from "./UsernameTester.vue";
 
 export default {
+  mounted() {
+    if (this.user) {
+      if (this.user.userSlug !== null) {
+        this.$router.push(`/profile`);
+      }
+    }
+  },
   data() {
     return {
       email: "",
@@ -109,8 +119,9 @@ export default {
 
   watch: {
     user(value) {
+      console.log(`current user state is ${value}`);
       if (value !== null && value !== undefined) {
-        this.$router.push(`/user/${this.user.userSlug}`);
+        this.$router.push(`/profile`);
       }
     },
   },
@@ -124,7 +135,7 @@ export default {
           this.$store.dispatch("signUserUp", {
             email: this.email,
             password: this.password,
-            username: this.username,
+            displayName: this.username,
           });
         }
       } else {
@@ -142,6 +153,9 @@ export default {
     },
     handleWhatIsUserName(whatIsUserName) {
       this.username = whatIsUserName;
+    },
+    onSigninGoogle() {
+      this.$store.dispatch("signUserInGoogle");
     },
   },
 };

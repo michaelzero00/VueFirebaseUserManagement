@@ -6,27 +6,31 @@
         <li><em>Email:</em> {{ currentUser.email }}</li>
         <li><em>UID:</em> {{ currentUser.uid }}</li>
         <li><em>User Role:</em> {{ currentUser.userRole }}</li>
-        <li>Photo:{{currentUser}}</li>
+        <li>Photo:{{ currentUser }}</li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import db from "../../firebase/firebaseInit"
+import db from "../../firebase/firebaseInit";
 import { mapState } from "vuex";
 export default {
   name: "UserProfile",
   props: [],
   data() {
-    return {
-    };
+    return {};
   },
   computed: mapState({
     currentUser: (state) => state.user.user,
   }),
-
-
+  watch: {
+    currentUser() {
+      if (!this.user) {
+        this.$router.push(`/signin`);
+      }
+    },
+  },
 };
 </script>
 

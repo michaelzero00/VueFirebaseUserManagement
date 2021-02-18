@@ -10,8 +10,10 @@ export default {
     mutations: {
         setUser(state, payload) {
             if (payload) {
+                console.log(`found payload, commiting user to state`)
                 state.user = payload;
             } else {
+                console.log('mutation - setting user to null')
                 state.user = null;
             }
         }
@@ -24,7 +26,7 @@ export default {
                 .auth()
                 .createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(data => {
-                    let userSlug = slugify(payload.username, {
+                    let userSlug = slugify(payload.displayName, {
                         replacement: "-",
                         remove: /[$*_+~.()'"!\-:#@]/g,
                         lower: true
@@ -32,9 +34,8 @@ export default {
                     const newUser = {
                         userRole: null,
                         uid: data.user.uid,
-                        userName: payload.username,
                         userSlug,
-                        displayName: data.user.displayName,
+                        displayName: payload.displayName,
                         email: data.user.email,
                         photoUrl: data.user.photoURL
                     };
@@ -64,11 +65,11 @@ export default {
                     commit("setLoading", false);
                     const newUser = {
                         id: user.uid,
-                        name: user.displayName,
+                        displayName: user.displayName,
                         email: user.email,
                         photoUrl: user.photoURL
                     };
-                    console.log(`commiting user to state from signUserIn function`)
+                    console.log(`commiting user to state from signUserIn function`);
                     commit("setUser", newUser);
                 })
                 .catch(error => {
@@ -93,23 +94,21 @@ export default {
                         .then(snapshot => {
                             // if it returns empty snapshot then user does not exsist in table
                             if (snapshot.empty) {
-                                console.log(`didn't find a user in the table so creating one`)
-                                    // slugify displayname
+                                console.log(`didn't find a user in the table so creating one`);
+                                // slugify displayname
                                 let userSlug = slugify(firebaseUserData.user.displayName, {
                                     replacement: "-",
-                                    remove: /[$*_+~.()'"!\-:#@]/g,
+                                    remove: /[$*_+~.][()'"!\-:#@]/g,
                                     lower: true
                                 });
                                 // form user object for the firestore table
                                 const newUser = {
                                     userRole: null,
                                     uid: firebaseUserData.user.uid,
-                                    userName: firebaseUserData.user.displayName,
                                     displayName: firebaseUserData.user.displayName,
                                     email: firebaseUserData.user.email,
                                     photoUrl: firebaseUserData.user.photoURL,
                                     userSlug: userSlug
-
                                 };
                                 // add new user to the firebase table
                                 db.collection("users")
@@ -118,24 +117,44 @@ export default {
                                         // form object for state
                                         const newStateUser = {
                                             uid: firebaseUserData.user.uid,
-                                            userName: firebaseUserData.user.displayName,
-                                            photoUrl: firebaseUserData.user.photoURL,
+                                            displayName: firebaseUserData.user.displayName,
+                                            photoUrl: firebaseUserData.user.photoUrl,
                                             userSlug: userSlug
-                                        }
+                                        };
                                         commit("setLoading", false);
-                                        console.log('commiting user to state after creating them in the firebase db')
+                                        console.log(
+                                            "commiting user to state after creating them in the firebase db"
+                                        );
                                         commit("setUser", newStateUser);
                                     })
                                     .catch(error => {
                                         commit("setLoading", false);
                                         commit("setError", error);
                                     });
-
                             } else {
-                                snapshot.forEach((doc) => {
-                                    console.log(doc.data())
-                                })
-
+                                snapshot.forEach(doc => {
+                                    // check if google user has a photoURL, if not, grab it from google and insert into table
+                                    if (!doc.data().photoUrl) {
+                                        console.log(`writing to doc: ${JSON.stringify(doc.id)}`)
+                                        db.collection("users")
+                                            .doc(doc.id)
+                                            .set({
+                                                photoUrl: firebaseUserData.user.photoURL
+                                            }, { merge: true });
+                                    }
+                                    const foundUser = doc.data();
+                                    const newStateUser = {
+                                        uid: foundUser.uid,
+                                        userName: foundUser.displayName,
+                                        photoUrl: firebaseUserData.user.photoURL,
+                                        userSlug: foundUser.userSlug
+                                    };
+                                    commit("setLoading", false);
+                                    console.log(
+                                        "commiting user to state after creating them in the firebase db (user found in db)"
+                                    );
+                                    commit("setUser", newStateUser);
+                                });
                             }
                         });
                 })
@@ -188,6 +207,7 @@ export default {
             firebase.auth().signOut();
 
             commit("clearError");
+            console.log("setting user to null")
             commit("setUser", null);
         }
     },
