@@ -10,10 +10,8 @@ export default {
     mutations: {
         setUser(state, payload) {
             if (payload) {
-                console.log(`found payload, commiting user to state`)
                 state.user = payload;
             } else {
-                console.log('mutation - setting user to null')
                 state.user = null;
             }
         }
@@ -69,14 +67,11 @@ export default {
                         email: user.email,
                         photoUrl: user.photoURL
                     };
-                    console.log(`commiting user to state from signUserIn function`);
                     commit("setUser", newUser);
                 })
                 .catch(error => {
-                    console.log(`got an error, commiting the setError`);
                     commit("setLoading", false);
                     commit("setError", error);
-                    console.log(error);
                 });
         },
         signUserInGoogle({ commit }) {
@@ -94,7 +89,6 @@ export default {
                         .then(snapshot => {
                             // if it returns empty snapshot then user does not exsist in table
                             if (snapshot.empty) {
-                                console.log(`didn't find a user in the table so creating one`);
                                 // slugify displayname
                                 let userSlug = slugify(firebaseUserData.user.displayName, {
                                     replacement: "-",
@@ -122,9 +116,6 @@ export default {
                                             userSlug: userSlug
                                         };
                                         commit("setLoading", false);
-                                        console.log(
-                                            "commiting user to state after creating them in the firebase db"
-                                        );
                                         commit("setUser", newStateUser);
                                     })
                                     .catch(error => {
@@ -135,7 +126,6 @@ export default {
                                 snapshot.forEach(doc => {
                                     // check if google user has a photoURL, if not, grab it from google and insert into table
                                     if (!doc.data().photoUrl) {
-                                        console.log(`writing to doc: ${JSON.stringify(doc.id)}`)
                                         db.collection("users")
                                             .doc(doc.id)
                                             .set({
@@ -207,7 +197,6 @@ export default {
             firebase.auth().signOut();
 
             commit("clearError");
-            console.log("setting user to null")
             commit("setUser", null);
         }
     },

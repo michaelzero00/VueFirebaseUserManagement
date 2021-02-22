@@ -19,7 +19,6 @@ export default {
             commit('clearError')
         },
         setError({ commit }, payload) {
-            console.log(`inside the set error action`)
             commit('setError', payload)
         }
     },

@@ -49,13 +49,11 @@ export default {
       this.timer = setTimeout(() => {
         //search db for username
         this.loadingIcon = true;
-        console.log(`searching db for username: ${this.testUserName}`)
         db.collection("users")
           .where("userName", "==", this.testUserName)
           .get()
           .then((snapshot) => {
             if (snapshot.empty) {
-              console.log(`this username is not taken`)
               this.userNameTaken = false;
               this.$emit("isUserNameTaken", this.userNameTaken);
               this.$emit("whatIsUserName", this.testUserName);
@@ -63,7 +61,6 @@ export default {
             } else {
               snapshot.forEach((doc) => {
                 if (doc.data().userName == this.testUserName) {
-                  console.log(`this username is taken`)
                   this.userNameTaken = true;
                   this.$emit("isUserNameTaken", this.userNameTaken);
                   this.loadingIcon = false;   

@@ -17,13 +17,6 @@
                 </span>
                 <span> Continue with Google </span>
               </button>
-              <!-- <button type="button" 
-                    class="button button has-margin-bottom-25 facebook is-fullwidth">
-              <span class="icon">
-                <i class="mdi mdi-24px mdi-facebook"></i>
-                </span> 
-                <span> Continue with Facebook </span>
-            </button> -->
             </div>
             <hr />
             <h3 class="mb-5">or sign up via email</h3>
@@ -119,7 +112,6 @@ export default {
 
   watch: {
     user(value) {
-      console.log(`current user state is ${value}`);
       if (value !== null && value !== undefined) {
         this.$router.push(`/profile`);
       }
@@ -164,10 +156,6 @@ export default {
 <style>
 .buttons .button.google {
   background-color: #de5246;
-  color: white;
-}
-.buttons .button.facebook {
-  background-color: #4267b2;
   color: white;
 }
 </style>

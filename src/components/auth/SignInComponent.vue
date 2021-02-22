@@ -17,15 +17,6 @@
                 </span>
                 <span> Continue with Google </span>
               </button>
-              <!-- <button
-                type="button"
-                class="button button has-margin-bottom-25 facebook is-fullwidth"
-              >
-                <span class="icon">
-                  <i class="mdi mdi-24px mdi-facebook"></i>
-                </span>
-                <span> Continue with Facebook </span>
-              </button> -->
             </div>
             <hr />
             <h3 class="mb-5">or sign in via email or username</h3>

@@ -43,7 +43,7 @@ export default {
             return;
           } else {
             snapshot.forEach((doc) => {
-              this.searchedUser = doc.data();
+              this.searchedUser = doc.data()
               this.$store.commit("setLoading", false)
             });
           }
